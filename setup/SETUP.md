@@ -27,7 +27,7 @@ Rules for the whole setup:
    mkdir -p vault/tools/vendor && curl -fL -o vault/tools/vendor/mermaid-11.min.js https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js
    ```
    (Any 11.x works; the renderer uses the file named `mermaid-*.min.js` in `tools/vendor`.)
-6. Optional, ask: does any class use **Haskell** (install GHC via https://www.haskell.org/ghcup/ → `~/.ghcup/bin`) or **Racket** (DrRacket)? Code blocks in notes can run them.
+6. **Don't install Haskell or Racket here.** They're optional modules (`vault/_modules/`), set up only if a class needs them (Phase 6).
 
 ## Phase 2: get to know the student (ask)
 Ask, then keep the answers for Phase 4:
@@ -77,15 +77,15 @@ For each core class:
 2. Pull its Classroom data: `cd ~/StudyVault/tools/sync && ~/miniconda3/envs/study/bin/python classindex.py --course "<folder>"` → writes `Class Materials.md` and `Syllabus & Schedule.md`.
 3. Read those and fill the Class Profile frontmatter (teacher, grading, late work, retakes, **ai_policy**, current unit, next assessment). Only facts from the class's own documents; leave a field empty rather than guess.
 4. Ask whether they have the **textbook as a PDF** for that class. If yes, run `/add-course` logic: copy it to `_sources/textbook.pdf`, build `Course Map.md`, an empty `Learner Model.md` and `_skilltree.yaml` (see `.claude/skills/add-course/SKILL.md`). If not, create a minimal `Course Map.md` (units from the syllabus), an empty `Learner Model.md`, and a small `_skilltree.yaml` from the syllabus units.
-5. **Haskell class?** Copy `templates/Teaching Haskell.md` into that class's folder, fill `{{CLASS_SITE}}` (the class website, or delete the line) and `{{HASKELL_HOMEWORK_FOLDER}}` (where their .hs homework lives), and fix the `Courses/<the Haskell class>/` references in `~/StudyVault/.claude/skills/{teach,homework,check}/SKILL.md` and `teach/code-exercises.md` to the real folder name. Optional: save *Learn You a Haskell* chapters into `_sources/lyah/`.
+5. **Programming classes:** if a class's Classroom posts or syllabus show it uses **Haskell** (Haskell, *Learn You a Haskell*, `ghci`, `.hs` files) or **Racket** (DrRacket, *How to Design Programs*), tell the student and ask whether to set it up now; if yes, follow `~/StudyVault/_modules/haskell/INSTALL.md` or `_modules/racket/INSTALL.md`. If no class uses them, do nothing: the modules stay in `_modules/` (uninstalled) so the tutor can add them later if the student starts such a class.
 `_examples/AP Calc BC/` is a finished example (Course Map, Learner Model format, skill-tree spec): model new classes on it, then you may delete it.
 Then: `~/miniconda3/envs/study/bin/python ~/StudyVault/tools/classes_table.py` (writes `Classes.md`) and `~/miniconda3/envs/study/bin/python ~/StudyVault/tools/skilltree.py --all`.
 
 ## Phase 7: Obsidian
 1. Ask the student to open `~/StudyVault` as a vault in Obsidian ("Open folder as vault"), turn on community plugins, and install **Execute Code** (Settings → Community plugins → Browse → "Execute Code" → Install → Enable). Optional: **Spaced Repetition** (for the flashcards).
-2. After they say it's installed: quit Obsidian, then write the plugin settings:
+2. After they say it's installed: quit Obsidian, then write the plugin settings (from the kit folder):
    ```bash
-   sed "s#__HOME__#$HOME#g" obsidian/execute-code-data.json > ~/StudyVault/.obsidian/plugins/execute-code/data.json
+   ~/miniconda3/envs/study/bin/python setup/fill_obsidian_settings.py
    ```
    and reopen Obsidian. Code blocks get a **Run** button in Reading view (⌘E). `Running Code.md` is the demo note: have them press Run on its first Python block.
 

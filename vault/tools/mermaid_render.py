@@ -13,7 +13,6 @@ from playwright.sync_api import sync_playwright
 
 TOOLS = Path(__file__).resolve().parent
 MERMAID_JS = sorted((TOOLS / "vendor").glob("mermaid-*.min.js"))[-1]
-CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 PAGE = """<!doctype html><html><head><meta charset="utf-8">
 <style>body{margin:0;background:#fff;font-family:-apple-system,Helvetica,sans-serif}#out{display:inline-block;padding:16px}</style>
@@ -36,8 +35,7 @@ def render(src_path, out_path, theme="default"):
     src = Path(src_path).read_text()
     src = src.strip().removeprefix("```mermaid").removesuffix("```").strip()
     with sync_playwright() as p:
-        kw = {"executable_path": CHROME} if Path(CHROME).exists() else {}
-        b = p.chromium.launch(headless=True, **kw)
+        b = p.chromium.launch(headless=True, channel="chrome")   # the installed Google Chrome (macOS or Windows)
         page = b.new_page(viewport={"width": 1400, "height": 1000}, device_scale_factor=2)
         page.set_content(PAGE)
         page.add_script_tag(path=str(MERMAID_JS))

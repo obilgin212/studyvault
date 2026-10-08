@@ -4,7 +4,9 @@ Read-only by design: it only navigates to pages and reads them. It never clicks 
 types credentials, or downloads files (downloads go through fetch.py, only after {{NAME}} approves them in /sync).
 """
 import json
+import os
 import subprocess
+import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -12,8 +14,17 @@ VAULT = Path(__file__).resolve().parents[2]          # the vault this tools/ fol
 SYNC_DIR = VAULT / "Inbox" / "sync"                    # snapshots Claude reads in /sync
 STATE_FILE = SYNC_DIR / "state.json"                   # what has been seen before
 CONFIG_FILE = Path(__file__).resolve().parent / "config.json"
-PROFILE_DIR = Path.home() / "Library/Application Support/StudyVaultSync/chrome-profile"   # login cookies live here
-CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+WINDOWS = sys.platform == "win32"
+NO_WINDOW = 0x08000000 if WINDOWS else 0          # CREATE_NO_WINDOW: background CLI calls without a console flash
+if WINDOWS:
+    _local = Path(os.environ.get("LOCALAPPDATA", Path.home() / "AppData" / "Local"))
+    PROFILE_DIR = _local / "StudyVaultSync" / "chrome-profile"                          # login cookies live here
+    CHROME = next((str(p) for p in (Path(os.environ.get("PROGRAMFILES", r"C:\Program Files")) / "Google/Chrome/Application/chrome.exe",
+                                     Path(os.environ.get("PROGRAMFILES(X86)", r"C:\Program Files (x86)")) / "Google/Chrome/Application/chrome.exe",
+                                     _local / "Google/Chrome/Application/chrome.exe") if p.exists()), "chrome.exe")
+else:
+    PROFILE_DIR = Path.home() / "Library/Application Support/StudyVaultSync/chrome-profile"   # login cookies live here
+    CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 LOG_FILE = SYNC_DIR / "collector.log"
 # Playwright normally starts Chrome with a stand-in keychain. Then Chrome can't decrypt the cookies saved by the
 # real sign-in (macOS encrypts them with the Keychain), treats the session as gone, and deletes it.
@@ -27,52 +38,77 @@ class profile_lock:
     def __init__(self, wait=1800):
         self.wait = wait
 
+    def _try_lock(self):
+        if WINDOWS:
+            import msvcrt
+            msvcrt.locking(self.f.fileno(), msvcrt.LK_NBLCK, 1)
+        else:
+            import fcntl
+            fcntl.flock(self.f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+
     def __enter__(self):
-        import fcntl
         import time
         PROFILE_DIR.parent.mkdir(parents=True, exist_ok=True)
         self.f = open(PROFILE_DIR.parent / "profile.lock", "w")
         t0 = time.time()
         while True:
             try:
-                fcntl.flock(self.f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                self._try_lock()
                 return self
-            except BlockingIOError:
+            except OSError:                       # BlockingIOError (macOS) / PermissionError (Windows)
                 if time.time() - t0 > self.wait:
                     raise RuntimeError("the sync browser profile is busy (another sync step is running)")
                 time.sleep(5)
 
     def __exit__(self, *a):
-        import fcntl
-        fcntl.flock(self.f, fcntl.LOCK_UN)
+        if WINDOWS:
+            import msvcrt
+            try:
+                msvcrt.locking(self.f.fileno(), msvcrt.LK_UNLCK, 1)
+            except OSError:
+                pass
+        else:
+            import fcntl
+            fcntl.flock(self.f, fcntl.LOCK_UN)
         self.f.close()
 
 
 def load_json(path, default):
     try:
-        return json.loads(Path(path).read_text())
+        return json.loads(Path(path).read_text(encoding="utf-8"))
     except (FileNotFoundError, json.JSONDecodeError):
         return default
 
 
 def save_json(path, data):
     Path(path).parent.mkdir(parents=True, exist_ok=True)
-    Path(path).write_text(json.dumps(data, indent=2, ensure_ascii=False))
+    Path(path).write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
 def log(msg):
     SYNC_DIR.mkdir(parents=True, exist_ok=True)
     line = f"{datetime.now():%Y-%m-%d %H:%M:%S} {msg}"
     print(line)
-    with open(LOG_FILE, "a") as f:
+    with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(line + "\n")
 
 
 def notify(title, message):
-    """macOS notification (no-op if it fails)."""
-    esc = lambda s: s.replace("\\", "\\\\").replace('"', '\\"')
-    subprocess.run(["osascript", "-e", f'display notification "{esc(message)}" with title "{esc(title)}"'],
-                   capture_output=True)
+    """Desktop notification: macOS Notification Center, or a Windows tray balloon (no-op if it fails)."""
+    try:
+        if WINDOWS:
+            q = lambda s: s.replace("'", "''")
+            ps = ("Add-Type -AssemblyName System.Windows.Forms; $n = New-Object System.Windows.Forms.NotifyIcon; "
+                  "$n.Icon = [System.Drawing.SystemIcons]::Information; $n.Visible = $true; "
+                  f"$n.ShowBalloonTip(10000, '{q(title)}', '{q(message)}', 'Info'); Start-Sleep 11; $n.Dispose()")
+            subprocess.Popen(["powershell", "-NoProfile", "-WindowStyle", "Hidden", "-Command", ps],
+                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        else:
+            esc = lambda s: s.replace("\\", "\\\\").replace('"', '\\"')
+            subprocess.run(["osascript", "-e", f'display notification "{esc(message)}" with title "{esc(title)}"'],
+                           capture_output=True)
+    except Exception:
+        pass
 
 
 # Where an expired school session lands: Google's own sign-in, or the school's single-sign-on page

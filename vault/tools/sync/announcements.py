@@ -16,18 +16,19 @@ import argparse
 import glob
 import json
 import re
+import shutil
 import subprocess
 import tempfile
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
-from common import SYNC_DIR, VAULT, load_json, log, save_json
+from common import NO_WINDOW, SYNC_DIR, VAULT, load_json, log, save_json
 from materials import kind_of, save_web
 from todo import load as load_todo, render, upsert
 from work import MONTHS, clean
 
 STATE = SYNC_DIR / "announcements.json"
-CLAUDE = str(Path.home() / ".local/bin/claude")
+CLAUDE = shutil.which("claude") or str(Path.home() / ".local/bin/claude")       # macOS / Windows / Linux
 KINDS = {"assignment", "reading", "test", "quiz", "form", "bring", "project", "other"}
 AUTO_POST = re.compile(r'^(Assignment|Material|Question|Quiz assignment):\s*"|posted a new (assignment|material|question)', re.I)
 
@@ -123,7 +124,7 @@ def ask_haiku(posts, today, existing=()):
     with tempfile.TemporaryDirectory() as tmp:        # outside the vault: no project instructions, no files
         r = subprocess.run([CLAUDE, "-p", prompt, "--model", "haiku", "--output-format", "text",
                             "--disallowedTools", "Bash,Read,Write,Edit,Glob,Grep,WebFetch,WebSearch,Agent,NotebookEdit"],
-                           capture_output=True, text=True, cwd=tmp, timeout=300)
+                           capture_output=True, text=True, cwd=tmp, timeout=300, creationflags=NO_WINDOW)
     out = r.stdout.strip()
     m = re.search(r"\{.*\}", out, re.S)
     if r.returncode != 0 or not m:

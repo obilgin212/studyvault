@@ -7,7 +7,7 @@ description: Assignment-driven learning. {{NAME}} gives an assignment (web link,
 
 The goal is that {{NAME}} **can do the assignment themselves and understands it**, with as little time wasted as possible. Only teach what the assignment needs and {{NAME}} doesn't already have. **Never hand over final answers to assigned problems.** Teach on *parallel* problems (same skill, different numbers or functions), then give hints and check {{NAME}}'s work.
 
-**Haskell / AP CS:** read `Courses/<the Haskell class>/Teaching Haskell.md` (template: kit `templates/Teaching Haskell.md`) first and follow it (sources, code style in notes, homework rules).
+**Haskell / AP CS:** read the class's `Teaching Haskell.md` (only if the optional Haskell module is installed: `_modules/haskell/`) first and follow it (sources, code style in notes, homework rules).
 
 **Session note:** once the assignment is identified, create `Courses/<course>/Sessions/YYYY-MM-DD <assignment> help.md` (title + a link to the assignment note), tell {{NAME}} its name, and append the session to it as you go (lesson steps, questions and answers, feedback, figures) so the chat and the note mirror each other. The assignment note keeps the problem list, skills map and checklist.
 

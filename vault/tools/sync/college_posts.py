@@ -20,7 +20,7 @@ from datetime import date, datetime
 from pathlib import Path
 
 from announcements import CLAUDE, post_body, post_date, similar
-from common import CONFIG_FILE, SYNC_DIR, VAULT, load_json, log, save_json
+from common import NO_WINDOW, CONFIG_FILE, SYNC_DIR, VAULT, load_json, log, save_json
 from todo import load as load_todo, render, upsert
 from work import clean
 
@@ -71,7 +71,7 @@ def ask(posts, today):
     with tempfile.TemporaryDirectory() as tmp:
         r = subprocess.run([CLAUDE, "-p", prompt, "--model", "haiku", "--output-format", "text",
                             "--disallowedTools", "Bash,Read,Write,Edit,Glob,Grep,WebFetch,WebSearch,Agent,NotebookEdit"],
-                           capture_output=True, text=True, cwd=tmp, timeout=300)
+                           capture_output=True, text=True, cwd=tmp, timeout=300, creationflags=NO_WINDOW)
     m = re.search(r"\{.*\}", r.stdout, re.S)
     if r.returncode != 0 or not m:
         raise RuntimeError(f"claude -p failed ({r.returncode}): {(r.stderr or r.stdout)[:200]}")

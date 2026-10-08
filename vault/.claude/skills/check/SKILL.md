@@ -5,7 +5,7 @@ description: Check {{NAME}}'s code exercise(s) in the current lesson or assignme
 
 # check: run + hidden tests + review
 
-Read `.claude/skills/teach/code-exercises.md` first (the block format and the tools). For Haskell, also read `Courses/<the Haskell class>/Teaching Haskell.md` (template: kit `templates/Teaching Haskell.md`).
+Read `.claude/skills/teach/code-exercises.md` first (the block format and the tools). For Haskell, also read the class's `Teaching Haskell.md` (only if the optional Haskell module is installed: `_modules/haskell/`).
 
 1. **Find the note:** the note this session is logging to. Otherwise, the most recently modified `.md` under `Courses/*/Sessions` or `Courses/*/Assignments` (`ls -t`). Say which note and exercise you're checking in one line.
 2. **Find the exercise:** `tools/notecode.py list "<note>"`. Exercise blocks: Haskell ones start with `-- ✏️` (their tests are the `runTests [...]` block below); Python ones have `import: 'tests-…'`. If {{NAME}} named one, use that; otherwise use the most recently edited one, i.e. the one no longer containing `undefined` / `...`.

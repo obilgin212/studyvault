@@ -117,6 +117,8 @@ def main():
             sys.exit(f"no block labelled {a.which!r}")
     lang = bs[idx]["lang"]
     if lang == "haskell":
+        if not (TOOLS / "hsnote.py").exists():
+            sys.exit("Haskell isn't set up in this vault: follow _modules/haskell/INSTALL.md (only needed for a class that uses Haskell)")
         hs_index = sum(1 for b in bs[:idx] if b["lang"] == "haskell")
         cmd = [sys.executable, str(TOOLS / "hsnote.py"), "--note", a.note, "--block", str(hs_index)]
         if a.tests:
@@ -130,7 +132,13 @@ def main():
         f.write(src)
     # Off-screen plotting: Obsidian captures plt.show() itself, but here it would open a window and hang.
     env = {**os.environ, "MPLBACKEND": "Agg"}
-    r = subprocess.run([str(runner), f.name], capture_output=True, text=True, timeout=60, env=env)
+    if lang == "python" and sys.platform == "win32":   # no zsh on Windows: run the same steps runpy does
+        env["PYTHONPATH"] = str(TOOLS / "py") + os.pathsep + env.get("PYTHONPATH", "")
+        env["PYTHONUTF8"] = "1"
+        cmd = [sys.executable, str(TOOLS / "py" / "_tabfix_run.py"), f.name]
+    else:
+        cmd = [str(runner), f.name]
+    r = subprocess.run(cmd, capture_output=True, text=True, timeout=60, env=env)
     print(r.stdout, end="")
     if r.stderr.strip():
         print("--- stderr ---\n" + r.stderr.replace(f.name, "<block>"), end="")

@@ -61,12 +61,9 @@ Every graded question (probes, gap quizzes, checks, reviews, exam diagnostics) f
 - Figures get unique names (`viz-…` / `mm-…` + timestamp) in `Courses/<course>/Visuals/`, embedded as `![[<name>.png|500]]` (Mermaid: paste the returned block).
 
 ## Running code in notes
-Code blocks in the vault run inside Obsidian (Execute Code plugin, Reading view). **Haskell: written like Python, and each note is one session** (`tools/hsnote.py`: blocks above are loaded, definitions are detected automatically, bare expressions are evaluated and shown; no `ghci>`, no `main`). Python runs through `tools/runpy`. Exercises use a ✏️ exercise block + 🔒 tests block; see `.claude/skills/teach/code-exercises.md`. `tools/notecode.py` runs a note's blocks the same way from the terminal. When {{NAME}} says "check", use the `check` skill.
+Code blocks in the vault run inside Obsidian (Execute Code plugin, Reading view). Python runs through `tools/runpy`. Exercises use a ✏️ exercise block + 🔒 tests block; see `.claude/skills/teach/code-exercises.md`. `tools/notecode.py` runs a note's blocks the same way from the terminal. When {{NAME}} says "check", use the `check` skill.
+**Optional modules (`_modules/`), not installed by default:** Haskell and Racket. Install one only when {{NAME}} has a class that uses that language: offer it (ask first), then follow `_modules/<name>/INSTALL.md`.
 
-<!-- OPTIONAL (keep only if a class teaches Haskell; otherwise delete this block) -->
-## Teaching Haskell ({{HASKELL_CLASS}})
-**Before any Haskell teaching, read `Courses/{{HASKELL_CLASS}}/Teaching Haskell.md`.** Code in notes is written like Python: no `ghci>`, no `main`; definitions carry down the note, bare expressions show their value. Understanding over memorizing: types first, predict-then-run, evaluation traces, "rebuild it from scratch" exercises, and ask for {{NAME}}'s reasoning before any hint. Never paste corrected code.
-<!-- /OPTIONAL -->
 
 ## Two ways through an assignment, and {{NAME}} chooses
 - **Full** (`/homework`): gap quiz → teach to the gap → hints while {{NAME}} works. This is the default.

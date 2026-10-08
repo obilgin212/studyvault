@@ -26,7 +26,9 @@ import tempfile
 from pathlib import Path
 
 HOME = Path.home()
-GHCI = HOME / ".ghcup/bin/ghci"
+# ghcup installs to ~/.ghcup/bin on macOS/Linux and C:\ghcup\bin on Windows
+GHCUP_BIN = next((d for d in (HOME / ".ghcup" / "bin", Path("C:/ghcup/bin")) if d.exists()), HOME / ".ghcup" / "bin")
+GHCI = GHCUP_BIN / ("ghci.exe" if sys.platform == "win32" else "ghci")
 CHECK_DIR = Path(__file__).resolve().parent / "hs"
 PROMPT = "ghci>"
 HEADER = re.compile(r'^--\s*HSNOTE\s+"([^"]*)"\s+"([^"]*)"\s*$')
@@ -319,7 +321,7 @@ def tidy_error(text, line_map):
 
 
 def ghci_env():
-    return {**os.environ, "PATH": f"{HOME}/.ghcup/bin:{os.environ.get('PATH', '/usr/bin:/bin')}"}
+    return {**os.environ, "PATH": f"{GHCUP_BIN}{os.pathsep}{os.environ.get('PATH', '/usr/bin:/bin')}"}
 
 
 def ghci_session(src, cmds):

@@ -1,6 +1,6 @@
 # Code exercises in notes (shared by /teach, /homework, /exam-prep, /check)
 
-> Haskell: `Courses/<the Haskell class>/Teaching Haskell.md` (template: kit `templates/Teaching Haskell.md`) sets *how* to teach it. This file covers the block mechanics.
+> Haskell: the class's `Teaching Haskell.md` (only if the optional Haskell module is installed: `_modules/haskell/`) sets *how* to teach it. This file covers the block mechanics.
 
 {{NAME}} runs code **inside Obsidian** with the Execute Code plugin (a Run button under each block, output inline). **The Run button only appears in Reading view** (⌘E toggles editing ↔ reading). Remind {{NAME}} the first time in a session. The plugin is configured to use `tools/runhs` → `tools/hsnote.py` (Haskell: **the note is one ghci session**) and `tools/runpy` (the `study` conda env + the `check` module). `Running Code.md` at the vault root is the reference example.
 
