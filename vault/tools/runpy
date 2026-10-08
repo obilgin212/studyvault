@@ -1,0 +1,10 @@
+#!/bin/zsh
+# Python wrapper for Obsidian Execute Code: the `study` env (numpy, matplotlib, OpenCV) + the check helper.
+# Code files go through _tabfix_run.py, which turns leading tabs into 4 spaces (Obsidian's Tab key
+# can insert real tabs, and Python rejects mixed tabs/spaces).
+export PYTHONPATH="$HOME/StudyVault/tools/py${PYTHONPATH:+:$PYTHONPATH}"
+PY="$HOME/miniconda3/envs/study/bin/python"
+if [[ "$1" == *.py && -f "$1" ]]; then
+  exec "$PY" "$HOME/StudyVault/tools/py/_tabfix_run.py" "$@"
+fi
+exec "$PY" "$@"

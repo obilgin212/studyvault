@@ -1,0 +1,4 @@
+#!/bin/zsh
+# Haskell runner for Obsidian Execute Code: ghci-style notes (see tools/hsnote.py).
+# The plugin calls: runhs -f <ghc> <tmpfile.hs>; haskellInject adds the note's path to the tmpfile.
+exec "$HOME/miniconda3/envs/study/bin/python" "$HOME/StudyVault/tools/hsnote.py" "$@"

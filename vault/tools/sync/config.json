@@ -1,0 +1,33 @@
+{
+  "_comment": "Core classes only: everything else on Classroom (clubs, homeroom) is ignored. match = a distinctive, case-insensitive part of the Classroom class name (list them: collect.py --list-classes); course = vault folder.",
+  "classes": [
+    {
+      "match": "AP Biology",
+      "course": "AP Bio"
+    }
+  ],
+  "include_todo": true,
+  "open_new_item_details": true,
+  "max_new_details_per_run": 25,
+  "public_sites": [
+    {
+      "name": "example course site",
+      "course": "AP Bio",
+      "sitemap": "https://example.com/sitemap.xml",
+      "prefix": "https://example.com/apbio/"
+    }
+  ],
+  "headless": true,
+  "page_delay_seconds": 2,
+  "auto_todo_and_materials": true,
+  "core_only": true,
+  "college_classes": [],
+  "_comment_college": "college_classes are read only for college-application posts (college_posts.py → To-Do 🎓 College). Their own assignments (yearbook, senior events) are never tracked.",
+  "signin_markers": [],
+  "_comment_signin": "Text found in the URL/HTML of your school's single-sign-on page; an expired session lands there. Google's own sign-in is always detected.",
+  "college": {
+    "platform": "",
+    "not_platform": "",
+    "early_deadline": "Nov 1"
+  }
+}

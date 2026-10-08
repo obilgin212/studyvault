@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(~/miniconda3/envs/study/bin/python:*)",
+      "Edit(Courses/**)",
+      "Edit(Learning Profile.md)",
+      "Edit(Dashboard.md)",
+      "WebSearch",
+      "WebFetch(domain:apcentral.collegeboard.org)",
+      "WebFetch(domain:openstax.org)",
+      "WebFetch(domain:tutorial.math.lamar.edu)",
+      "Bash(~/.ghcup/bin/runghc:*)",
+      "Bash(~/.ghcup/bin/ghci:*)",
+      "Bash(runghc:*)",
+      "Bash(ghci:*)",
+      "Bash(sips:*)",
+      "WebFetch(domain:learnyouahaskell.github.io)",
+      "WebFetch(domain:learnyouahaskell.com)",
+      "Edit(Inbox/**)"
+    ]
+  }
+}

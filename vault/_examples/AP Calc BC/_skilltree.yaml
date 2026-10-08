@@ -1,0 +1,70 @@
+# Skill tree for AP Calc BC → tools/skilltree.py → Skill Tree.canvas
+# lm: start of the Learner Model concept text (exact) · find: words that mark the skill in notes (lowercase)
+# needs: prerequisite node ids · given: level known from class (used only until the Learner Model has a row)
+title: "AP Calc BC"
+tagline: "EXAMPLE spec: Ch 3 tested ✓ · Ch 4 next · then applications"
+accent: "#5b8def"
+branches:
+  - {id: found, name: "📐 Foundations (Ch 1–2)"}
+  - {id: ch3, name: "📈 Ch 3 · Derivatives"}
+  - {id: ch4, name: "🔗 Ch 4 · More derivatives"}
+  - {id: craft, name: "🧰 Exam craft"}
+  - {id: ch5, name: "🚀 Ch 5 · Applications (next)"}
+  - {id: ch6, name: "∫ Ch 6 · Definite integrals (ahead)"}
+nodes:
+  - {id: limits, label: "Limits & continuity", branch: found, given: 3, given_note: "Ch 2 test 9/9", find: ["continuity", "continuous at"], needs: []}
+  - {id: logs, label: "Log rules, change of base, aˣ = eˣˡⁿᵃ", branch: found, ref: "§1.5", lm: ["Log properties"], find: ["log rules", "log propert", "change of base"], needs: []}
+
+  - {id: limdef, label: "Limit definition of the derivative", branch: ch3, ref: "§3.1", lm: ["Limit definition of derivative"], find: ["limit definition"], needs: [limits]}
+  - {id: altform, label: "Alternate form f′(a) = lim x→a", branch: ch3, ref: "§3.1", lm: ["Alternate form"], find: ["alternate form"], needs: [limdef]}
+  - {id: graphs, label: "Graphs of f ↔ f′", branch: ch3, ref: "§3.1", lm: ["Graph of $f$"], find: ["graph of $f'$", "graph of f'", "f ↔ f′", "graphs of f"], needs: [limdef]}
+  - {id: onesided, label: "One-sided derivatives, piecewise joins", branch: ch3, ref: "§3.1", lm: ["One-sided"], find: ["one-sided", "piecewise"], needs: [limdef]}
+  - {id: fails, label: "Where f′ fails (corner, cusp, vertical tangent)", branch: ch3, ref: "§3.2", lm: ["Where $f'$ fails"], find: ["corner", "cusp"], needs: [limdef]}
+  - {id: diffcont, label: "Differentiable ⇒ continuous", branch: ch3, ref: "§3.2", lm: ["Differentiable ⇒"], find: ["differentiable ⇒", "implies continuity"], needs: [fails]}
+  - {id: nder, label: "Numerical derivative (NDER)", branch: ch3, ref: "§3.2", lm: ["Numerical derivative"], find: ["nder", "symmetric difference"], needs: [limdef]}
+  - {id: ivt, label: "IVT for derivatives", branch: ch3, ref: "§3.2", lm: ["IVT for derivatives"], find: ["ivt"], needs: [fails]}
+  - {id: power, label: "Power, constant & sum rules", branch: ch3, ref: "§3.3", lm: ["Power / constant"], find: ["power rule"], needs: [limdef]}
+  - {id: product, label: "Product rule", branch: ch3, ref: "§3.3", lm: ["Product rule"], find: ["product rule"], needs: [power]}
+  - {id: quotient, label: "Quotient rule", branch: ch3, ref: "§3.3", lm: ["Quotient rule"], find: ["quotient rule"], needs: [product]}
+  - {id: higher, label: "Higher-order derivatives", branch: ch3, ref: "§3.3", lm: ["Higher-order"], find: ["higher-order", "second derivative"], needs: [power]}
+  - {id: tangent, label: "Tangent & normal lines", branch: ch3, ref: "§3.1/3.3", lm: ["Tangent / normal lines"], find: ["tangent line", "normal line"], needs: [power]}
+  - {id: motion, label: "Position, velocity, speed, acceleration", branch: ch3, ref: "§3.4", lm: ["Position / velocity"], find: ["velocity", "speed"], needs: [higher]}
+  - {id: particle, label: "Particle motion analysis", branch: ch3, ref: "§3.4", lm: ["Particle motion"], find: ["particle", "speeding up", "slowing down"], needs: [motion]}
+  - {id: marginal, label: "Marginal cost", branch: ch3, ref: "§3.4", lm: ["Marginal cost"], find: ["marginal"], needs: [power]}
+  - {id: sincos, label: "sin & cos derivatives", branch: ch3, ref: "§3.5", lm: ["$\\sin$, $\\cos$ derivatives"], find: ["trig derivatives", "\\frac{d}{dx}\\sin"], needs: [limdef]}
+  - {id: trig, label: "tan, cot, sec, csc derivatives", branch: ch3, ref: "§3.5", lm: ["$\\tan, \\cot"], find: ["\\sec x\\tan x", "\\sec^2", "csc"], needs: [sincos, quotient]}
+  - {id: shm, label: "Simple harmonic motion, jerk", branch: ch3, ref: "§3.5", lm: ["Simple harmonic"], find: ["harmonic", "jerk"], needs: [sincos, motion]}
+
+  - {id: chain, label: "Chain rule", branch: ch4, ref: "§4.1", lm: ["Chain rule: nested"], find: ["chain rule"], needs: [power, sincos]}
+  - {id: chaintable, label: "Chain rule from a table", branch: ch4, ref: "§4.1", lm: ["Chain rule from a table"], find: ["from a table", "f'(g("], needs: [chain]}
+  - {id: chainpow, label: "Power chain rule (cos²u)", branch: ch4, ref: "§4.1", lm: ["Power chain rule"], find: ["\\cos^2", "cos^2"], needs: [chain]}
+  - {id: chain2, label: "Chain rule through two variables", branch: ch4, ref: "§4.1", lm: ["Chain rule through two"], find: ["\\frac{dw}{dr}", "dw/dr", "two variables"], needs: [chain]}
+  - {id: param, label: "Slope of a parametric curve", branch: ch4, ref: "§4.1", lm: ["Slope of a parametrized"], find: ["parametri"], needs: [chain]}
+  - {id: implicit, label: "Implicit differentiation", branch: ch4, ref: "§4.2", lm: ["Implicit $dy/dx$"], find: ["implicit"], needs: [chain]}
+  - {id: implprod, label: "Implicit product terms (xy)", branch: ch4, ref: "§4.2", lm: ["Implicit product"], find: ["\\frac{d}{dx}xy", "xy'"], needs: [implicit, product]}
+  - {id: slopedef, label: "Where the slope is defined", branch: ch4, ref: "§4.2", lm: ["Where the slope is defined"], find: ["slope is defined", "denominator = 0", "denominator=0"], needs: [implicit]}
+  - {id: impl2, label: "Implicit second derivative", branch: ch4, ref: "§4.2", lm: ["Implicit second"], find: ["implicit second"], needs: [implicit, quotient]}
+  - {id: ratpow, label: "Rational powers", branch: ch4, ref: "§4.2", lm: ["Rational powers"], find: ["rational power"], needs: [implicit]}
+  - {id: invslope, label: "Inverse function slope 1/f′(b)", branch: ch4, ref: "§4.3", lm: ["Inverse function slope"], find: ["inverse function", "f^{-1}"], needs: [chain, tangent]}
+  - {id: invtrig, label: "Inverse trig derivatives", branch: ch4, ref: "§4.3", lm: ["Inverse trig"], find: ["inverse trig", "\\sin^{-1}", "arcsin"], needs: [implicit, invslope]}
+  - {id: lnu, label: "ln u rule: u′/u", branch: ch4, ref: "§4.4", lm: ["$\\frac{d}{dx}\\ln u"], find: ["\\ln u", "ln u"], needs: [chain, logs]}
+  - {id: lndomain, label: "Domain tag on ln (u > 0)", branch: ch4, ref: "§4.4", lm: ["Domain condition on ln"], find: ["u>0", "u > 0"], needs: [lnu]}
+  - {id: logau, label: "logₐ u derivatives", branch: ch4, ref: "§4.4", lm: ["Derivative of $\\log_a"], find: ["\\log_a", "\\log_{10}", "log_{10}"], needs: [lnu]}
+  - {id: au, label: "aᵘ derivatives", branch: ch4, ref: "§4.4", lm: ["$\\frac{d}{dx}a^u$"], find: ["a^u", "2^{\\sin"], needs: [lnu, logs]}
+  - {id: logdiff, label: "Logarithmic differentiation", branch: ch4, ref: "§4.4", lm: ["Logarithmic differentiation"], find: ["logarithmic differentiation", "log diff"], needs: [lnu, product]}
+  - {id: simplify, label: "Simplify before differentiating", branch: ch4, ref: "§4.4", lm: ["Simplify before"], find: ["simplify before", "e^{\\ln"], needs: [logs, lnu]}
+  - {id: tangout, label: "Tangent through an outside point", branch: ch4, ref: "§4.4", lm: ["Tangent line through an outside"], find: ["outside point", "point of tangency", "through the origin"], needs: [tangent, lnu]}
+  - {id: domfp, label: "Domain of f′ ⊆ domain of f", branch: ch4, ref: "§4.4", lm: ["Domain of $f'$"], find: ["domain of f'", "domain of $f'$"], needs: [lndomain]}
+
+  - {id: signs, label: "√(u²) = |u|, carrying minus signs", branch: craft, lm: ["$\\sqrt{u^2}"], find: ["\\sqrt{u^2}", "minus sign", "carrying signs"], needs: [], tip: "your most common last-step slip"}
+  - {id: frq, label: "FRQ justifications (\"because…\")", branch: craft, lm: ["FRQ sign proofs"], find: ["justif"], needs: [higher]}
+
+  - {id: extrema, label: "Extreme values", branch: ch5, ref: "Ch 5", find: ["extreme value", "extrema"], needs: [graphs, power]}
+  - {id: mvt, label: "Mean Value Theorem", branch: ch5, ref: "Ch 5", find: ["mean value theorem", "mvt"], needs: [extrema, diffcont]}
+  - {id: fpp, label: "f′ & f″ and the graph (concavity)", branch: ch5, ref: "Ch 5", find: ["concav", "inflection"], needs: [mvt, higher, graphs]}
+  - {id: optim, label: "Optimization", branch: ch5, ref: "Ch 5", find: ["optimiz"], needs: [extrema, fpp]}
+  - {id: linear, label: "Linearization", branch: ch5, ref: "Ch 5", find: ["lineariz", "local linear"], needs: [tangent]}
+  - {id: related, label: "Related rates", branch: ch5, ref: "Ch 5", find: ["related rate"], needs: [implicit, chain2]}
+
+  - {id: riemann, label: "Riemann sums & the definite integral", branch: ch6, ref: "Ch 6", find: ["riemann"], needs: [limits]}
+  - {id: ftc, label: "Fundamental Theorem of Calculus", branch: ch6, ref: "Ch 6", find: ["fundamental theorem"], needs: [riemann, chain]}

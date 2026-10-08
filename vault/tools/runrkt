@@ -1,0 +1,4 @@
+#!/bin/zsh
+# Racket runner for Obsidian Execute Code. The plugin spawns through a shell, and the real
+# path has a space ("Racket v8.18"), so the plugin calls this space-free wrapper instead.
+exec "/Applications/Racket v8.18/bin/racket" "$@"
