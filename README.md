@@ -6,6 +6,7 @@ A learning system built on **Claude Code** (your Claude subscription, no API key
 - **Probe → plan → teach:** it finds where your understanding starts and stops before teaching, plans a path from things you already know, then teaches one step at a time with quick checks.
 - **Google Classroom sync** without any API: a headless Chrome reads Classroom (read-only) once a day. It builds a **To-Do list** from your real To-do and Missing lists, writes a note per assignment with its materials, and turns teacher announcements into tasks.
 - **Two ways through homework:** full (`/homework`: gap quiz → teach to the gap → hints) or guided (`/guide`: you pick the parts, no quizzes). It never gives final answers to assigned problems.
+- **Learns your teacher's tests (`/past-tests`):** upload past tests, quizzes and practice tests; every question is tagged by skill, format, problem type and the teacher's habits (removing scaffolds, hidden steps, trap answers…). It builds a Test Profile that gets sharper with every test, forecasts the next one, and makes mock tests with the same shape and the same kind of hard. Forecasts are scored against the real test so they improve.
 - **Skill trees:** one Obsidian canvas per class, colored by what you actually know, updated after every session, with links to every note where you worked on each skill.
 - **Runnable code in notes** (Python) with hidden-test checking; **optional modules** add Haskell (notebook-style) and Racket only for students whose classes use them.
 - **Visuals:** diagram and figure agents that check their own output.
@@ -21,7 +22,7 @@ Clone or download this repo, then follow **[SETUP-PROMPT.md](SETUP-PROMPT.md)**:
 ## What's in here
 | Path | What it is |
 |---|---|
-| `vault/.claude/skills/` | the tutor's skills: `/teach`, `/homework`, `/guide`, `/exam-prep`, `/review`, `/sync`, `/profile`, `/add-course`, `check`, `/college` |
+| `vault/.claude/skills/` | the tutor's skills: `/teach`, `/homework`, `/guide`, `/exam-prep`, `/past-tests`, `/review`, `/sync`, `/profile`, `/add-course`, `check`, `/college` |
 | `vault/.claude/agents/` | `verifier` (textbook-first fact checks and topic scoping), `visualizer` (matplotlib figures), `mermaid-maker` (diagrams) |
 | `vault/tools/` | PDF/textbook tools, code runners, skill trees, Classroom sync (`tools/sync/`), college tools |
 | `vault/_modules/` | optional modules, **not installed** unless a class needs them: Haskell, Racket (each has an `INSTALL.md`) |

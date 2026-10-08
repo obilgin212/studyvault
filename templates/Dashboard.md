@@ -20,6 +20,7 @@ Open Claude Code in this folder (`cd ~/StudyVault && claude`), then type:
 | `/guide <assignment>` | **Guided mode:** you pick the parts, no quizzes, faster (still teaches the why) |
 | `/teach <course> <topic>` | Goal → probe → plan → step-by-step lesson, logged to `Sessions/` |
 | `/exam-prep <course> <exam>` | Diagnose → drill weak spots → timed set → summary sheet |
+| `/past-tests <add · forecast · mock> <course>` | Upload past tests → learns how your teacher writes tests → mock tests shaped like the real one |
 | `/review` | 10–15 min mixed review of shaky and stale concepts |
 | `/sync` | What's new on Google Classroom → To-Do, assignment notes, materials |
 | `/profile` | Learning-preferences quiz → updates [[Learning Profile]] |

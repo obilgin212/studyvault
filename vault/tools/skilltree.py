@@ -195,6 +195,9 @@ def card_text(n, by, hits, state, today):
     if other and (lvl >= 0 or n.get("ready")):
         word = "↖ builds on" if lvl >= 0 else "🔑 unlocked by"
         lines.append(f"{word}: " + ", ".join(o["label"] for o in other[:2]) + ("…" if len(other) > 2 else ""))
+    t = n.get("test")
+    if t:
+        lines.append(f"🎯 on tests {t['n']}×" + (f" · missed {t['missed']:g}" if t.get("missed") else " · never missed"))
     if n.get("tip"):
         lines.append(f"*{n['tip']}*")
     if hits:
@@ -242,6 +245,10 @@ def build(course, today=None):
     added = adopt_new_rows(spec, spath, rows)
     by = resolve(spec, rows)
     notes = notes_for(course)
+    tstats = COURSES / course / "Tests" / "stats.json"          # from tools/testprofile.py (past tests)
+    tstats = json.loads(tstats.read_text(encoding="utf-8")) if tstats.exists() else {}
+    for n in spec["nodes"]:
+        n["test"] = tstats.get(n["id"])
 
     # level-up memory
     sfile = COURSES / course / ".skilltree.json"
@@ -266,6 +273,9 @@ def build(course, today=None):
     fresh = [n for n in known if state[n["id"]].get("up") and
              today - date.fromisoformat(state[n["id"]]["up"]) <= timedelta(days=7)]
     weak = sorted([n for n in known if n["level"] in (1, 2)], key=lambda n: (n["level"], n["seen"]))
+    # test-weighted priorities: shows up on this teacher's tests a lot × not solid yet (or missed there)
+    tp = sorted([n for n in known if n.get("test") and (n["level"] < 3 or n["test"].get("missed"))],
+                key=lambda n: -(n["test"]["weight"] * (4 - max(n["level"], 0)) + n["test"].get("missed", 0)))
 
     head = [f"# 🌳 {spec.get('title', course)}", f"*{spec['tagline']}*" if spec.get("tagline") else "",
             f"## {bar(frac)} {round(100 * frac)}%",
@@ -277,6 +287,8 @@ def build(course, today=None):
         head.append("**🎯 Strengthen next:** " + ", ".join(n["label"] for n in weak[:3]))
     if ready:
         head.append("**🔓 Ready to learn:** " + ", ".join(n["label"] for n in ready[:3]))
+    if tp:
+        head.append("**🎯 Test priorities** (often on this teacher's tests, not solid yet): " + ", ".join(n["label"] for n in tp[:4]))
     head.append("\n*⭐ mastered · 🟩 solid · 🟨 developing · 🟥 shaky · ⬜ seen, not yet · 🔓 ready · 🔒 locked. "
                 "Arrows: green = that prerequisite is solid (the path is lit), grey = it still needs work. Click a 📝 link to open the note. Updated " + f"{datetime.now():%-m/%-d %-I:%M %p}* · [[Courses/{course}/Learner Model|Learner Model]]")
     head_text = "\n".join(x for x in head if x)
